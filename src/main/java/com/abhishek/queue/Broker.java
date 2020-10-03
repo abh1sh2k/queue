@@ -1,10 +1,14 @@
 package com.abhishek.queue;
 
 import com.example.queue.Message;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class Broker {
     private Queue queue;
 
+    @Inject
     Broker(Queue queue) {
         this.queue = queue;
     }

@@ -11,6 +11,6 @@ public class Consumer {
     }
 
     public void recieve(Message message) {
-        System.out.println("recieved message {" + message + "} at consumerid {" + id + "} at time " + System.currentTimeMillis());
+        System.out.println("recieved message {" + message.getBody() + "} at consumerid {" + id + "} at time " + System.currentTimeMillis());
     }
 }

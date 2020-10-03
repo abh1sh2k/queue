@@ -1,6 +1,7 @@
 package com.abhishek.queue;
 
 import com.example.queue.Message;
+import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ public class ConsumerService extends Thread {
     Map<String, List<Consumer>> consumerMap;
     Broker broker;
 
+    @Inject
     ConsumerService(Broker broker) {
         this.broker = broker;
         this.consumerMap = new HashMap<>();
@@ -20,25 +22,24 @@ public class ConsumerService extends Thread {
     public void run() {
         while (true) {
             try {
-                sleep(1000);
+                sleep(2000);
+                Message message = broker.consume();
+                if (message == null)
+                    System.out.println(" no messages in que");
+                else if (System.currentTimeMillis() > message.getTimeToExpire()) {
+                    System.out.println(message.body + " has expired");
+                } else {
+                    List<Consumer> consumers = consumerMap.get(message.getTopic());
+                    if (consumers == null) {
+                        System.out.println(" message for topic " + message.getTopic() + " discarded");
+                    } else {
+                        consumers.forEach(consumer -> {
+                            consumer.recieve(message);
+                        });
+                    }
+                }
             } catch (Exception ex) {
 
-            }
-
-            Message message = broker.consume();
-            if (message == null)
-                System.out.println(" no messages in que");
-            else if (System.currentTimeMillis() > message.getTimeToExpire()) {
-                System.out.println(message.body + " has expired");
-            } else {
-                List<Consumer> consumers = consumerMap.get(message.getTopic());
-                if (consumers == null) {
-                    System.out.println(" message for topic " + message.getTopic() + " discarded");
-                } else {
-                    consumers.forEach(consumer -> {
-                        consumer.recieve(message);
-                    });
-                }
             }
         }
     }

@@ -13,7 +13,7 @@ public class MessageCreater {
 
     static Message getMessage() {
         int timeToExpire = 10000 + random.nextInt(10000);
-        int topic = random.nextInt(3);
+        int topic = 1 + random.nextInt(3);
         Message message = new Message("body-" + i, "topic-" + topic, timeToExpire);
         return message;
     }
